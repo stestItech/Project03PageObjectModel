@@ -149,7 +149,7 @@ public class Page {
         }
 
         CustomListeners.testReport.get()
-                .log(Status.INFO, "Typing in: " + locator + " entered value as: " + value);
+                .log(Status.INFO, "Typing in field: " + locator + " entered value as: " + value);
         log2.info("Typing in: " + locator + " entered value as: " + value);
     }
 
