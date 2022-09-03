@@ -37,7 +37,7 @@ import java.util.Properties;
 
 public class Page {
     //public RemoteWebDriver driver = null;
-    public static ThreadLocal<RemoteWebDriver> dr = new ThreadLocal<>();
+    //public static ThreadLocal<RemoteWebDriver> dr = new ThreadLocal<>();
     public static Properties or = new Properties();
     public static Properties config = new Properties();
     public static FileInputStream fis;
