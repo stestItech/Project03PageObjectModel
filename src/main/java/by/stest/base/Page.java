@@ -98,10 +98,8 @@ public class Page {
                 WebDriverManager.chromedriver().setup();
                 HashMap<String, Object> prefs = new HashMap<>();
                 prefs.put("intl.accept_languages", "en-EN,en");
-                // to disable pop up with password save, not sure that "profile.password_manager_enabled"
-                // is needed for that
                 prefs.put("credentials_enable_service", false);
-                prefs.put("profile.password_manager_enabled", false);
+                //prefs.put("profile.password_manager_enabled", false);
                 ChromeOptions options = new ChromeOptions();
                 options.setExperimentalOption("prefs", prefs);
                 options.setExperimentalOption("excludeSwitches", Arrays.asList("enable-automation"));
