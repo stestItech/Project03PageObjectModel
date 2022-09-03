@@ -13,8 +13,6 @@ public class AccountsPage extends Page {
         return new CreateAccountPage();
     }
 
-    // added in master branch
-
     public void goToImportAccounts() {
 
     }
