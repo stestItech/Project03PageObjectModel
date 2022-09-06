@@ -12,7 +12,7 @@ import by.stest.pages.ZohoAppPage;
 public class RoughTest {
 
     public static void main(String[] args) {
-        //
+
         HomePage home = new HomePage();
         LoginPage lp = home.goToLogin();
         lp.navigateBack();
