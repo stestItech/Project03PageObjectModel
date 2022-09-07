@@ -10,3 +10,8 @@ target/
 *.ipr
 src/test/resources/logs/
 
+#Maven
+mvnw
+mvnw.cmd
+.mvn
+
