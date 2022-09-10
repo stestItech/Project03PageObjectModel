@@ -20,7 +20,6 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -36,27 +35,23 @@ import java.util.HashMap;
 import java.util.Properties;
 
 public class Page {
-    //public RemoteWebDriver driver = null;
-    //public static ThreadLocal<RemoteWebDriver> dr = new ThreadLocal<>();
-    public static Properties or = new Properties();
+
+    public static WebDriver driver;
+    public static WebDriverWait wait;
     public static Properties config = new Properties();
+    public static Properties or = new Properties();
     public static FileInputStream fis;
     public static Logger log2 = LogManager.getLogger(Page.class.getName());
     public static ExcelReader excel = new ExcelReader("src\\test\\resources\\excel\\Testdata.xlsx");
     public static ExtentReports extent = ExtentManager.createInstance();
-    public static ExtentTest test;
     public static ThreadLocal<ExtentTest> testThread = new ThreadLocal<>();
     public String browser;
-    public static ThreadLocal<String> browserThread = new ThreadLocal<>();
-
-    public static WebDriver driver;
-    public static WebDriverWait wait;
     public static TopMenu topMenu;
+    public static Date d = new Date();
 
     public Page() {
 
         if (driver == null) {
-            Date d = new Date();
             String currentDate = d.toString().replace(":", "_").replace(" ", "_");
             TestUtil.initializeYourLogger("src/test/resources/logs/v2_app_" + currentDate
                     + ".log","%d %p %c [%t] %m%n");
@@ -83,6 +78,7 @@ public class Page {
                 e.printStackTrace();
             }
 
+            //Jenkins Browser filter configuration
             if (System.getenv("browser") != null && !System.getenv("browser").isEmpty()) {
                 browser = System.getenv("browser");
             } else {
@@ -135,7 +131,7 @@ public class Page {
             driver.findElement(By.id(or.getProperty(locator))).click();
         }
 
-        CustomListeners.testReport.get().log(Status.INFO, "Clicking on: " + locator);
+        testThread.get().log(Status.INFO, "Clicking on: " + locator);
         log2.info("Clicking on element: " + locator);
     }
 
@@ -148,7 +144,7 @@ public class Page {
             driver.findElement(By.id(or.getProperty(locator))).sendKeys(value);
         }
 
-        CustomListeners.testReport.get()
+        CustomListeners.testThread.get()
                 .log(Status.INFO, "Typing in field: " + locator + " entered value as: " + value);
         log2.info("Typing in: " + locator + " entered value as: " + value);
     }
@@ -167,7 +163,7 @@ public class Page {
         Select select = new Select(dropdown);
         select.selectByVisibleText(value);
 
-        CustomListeners.testReport.get()
+        CustomListeners.testThread.get()
                 .log(Status.INFO, "Selecting from dropdown: " + locator + " value as " + value);
         log2.info("Selecting from dropdown: " + locator + " value as " + value);
     }
@@ -187,8 +183,8 @@ public class Page {
             Reporter.log("<br>");
 
             // Extent Reports
-            CustomListeners.testReport.get().log(Status.FAIL, "Verification failed with exception: " + t.getMessage());
-            CustomListeners.testReport.get().fail("<b>" + "<font color=" + "red>" + "Screenshot of failure" + "</font>"
+            testThread.get().log(Status.FAIL, "Verification failed with exception: " + t.getMessage());
+            testThread.get().fail("<b>" + "<font color=" + "red>" + "Screenshot of failure" + "</font>"
                     + "</b>", MediaEntityBuilder.createScreenCaptureFromPath(TestUtil.screenshotName).build());
 
             throw t;

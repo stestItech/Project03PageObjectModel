@@ -390,7 +390,7 @@ public class ExcelReader {
 
 	}
 
-	// find whether sheets exists
+	// find whether sheets exist
 	public boolean isSheetExist(String sheetName) {
 		int index = workbook.getSheetIndex(sheetName);
 		if (index == -1) {

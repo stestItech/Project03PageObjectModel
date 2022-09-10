@@ -8,13 +8,13 @@ public class HomePage extends Page {
 
     public LoginPage goToLogin() {
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(".zh-login")));
-        click("signInBtn_CSS");
+        click("signInLnk_CSS");
         return new LoginPage();
     }
 
     public SignUpPage goToSignUp() {
         wait.until(ExpectedConditions.elementToBeClickable(By.className("zh-signup")));
-        driver.findElement(By.className("zh-signup")).click();
+        click("signUpLnk_CSS");
         return new SignUpPage();
     }
 }

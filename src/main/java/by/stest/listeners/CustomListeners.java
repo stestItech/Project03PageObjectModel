@@ -11,7 +11,6 @@ import by.stest.utilities.MonitoringMail;
 import by.stest.utilities.TestConfig;
 import org.testng.*;
 
-import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 import com.aventstack.extentreports.Status;
@@ -19,67 +18,68 @@ import com.aventstack.extentreports.markuputils.ExtentColor;
 import com.aventstack.extentreports.markuputils.Markup;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
 
-import by.stest.utilities.ExtentManager;
 import by.stest.utilities.TestUtil;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
 
 public class CustomListeners extends Page implements ITestListener, ISuiteListener {
 	
-	static Date d = new Date();
-	private static String fileName = "Extent_" + d.toString().replace(":", "_").replace(" ", "_") + ".html";
+	private static String fileName = "Extent_" + d.toString().replace(":", "_")
+			.replace(" ", "_") + ".html";
 	static String messageBody;
-	private static ExtentReports extent = ExtentManager.createInstance();
-	public static ThreadLocal<ExtentTest> testReport = new ThreadLocal<>();
-	
 	
 	public void onTestStart(ITestResult result) {
-		ExtentTest test = extent.createTest(result.getTestClass().getName() + "     @TestCase : "+result.getMethod().getMethodName());
-		testReport.set(test);
+		ExtentTest test = extent.createTest(result.getTestClass().getName() +
+				"     @TestCase : "+result.getMethod().getMethodName());
+		testThread.set(test);
 		if (!TestUtil.isTestRunnable(result.getName(), excel)) {
-			throw new SkipException("Skipping the " + result.getName().toUpperCase() + " as the RunMode is NO");
+			throw new SkipException("Skipping the " + result.getName().toUpperCase() +
+					" as the RunMode is NO");
 		}
 	}
 
 	public void onTestSkipped(ITestResult result) {
-		String methodName=result.getMethod().getMethodName();
-		String logText="<b>"+"Test Case:- "+ methodName+ " Skipped"+"</b>";		
-		Markup m=MarkupHelper.createLabel(logText, ExtentColor.YELLOW);
-		testReport.get().skip(m);
+		String methodName = result.getMethod().getMethodName();
+		String logText="<b>" + "Test Case:- " + methodName+ " Skipped" + "</b>";
+		Markup m = MarkupHelper.createLabel(logText, ExtentColor.YELLOW);
+		testThread.get().skip(m);
 		String exceptionMessage = result.getThrowable().getMessage();
-		testReport.get().skip(exceptionMessage);
+		testThread.get().skip(exceptionMessage);
 	}
 
 	public void onTestSuccess(ITestResult result) {
-		String methodName=result.getMethod().getMethodName();
-		String logText="<b>"+"TEST CASE: - "+ methodName.toUpperCase()+ " PASSED"+"</b>";
+		String methodName = result.getMethod().getMethodName();
+		String logText = "<b>" + "TEST CASE: - " + methodName.toUpperCase() + " PASSED" + "</b>";
 		Markup m = MarkupHelper.createLabel(logText, ExtentColor.GREEN);
-		testReport.get().pass(m);
+		testThread.get().pass(m);
 	}
 
 	public void onTestFailure(ITestResult result) {
 		String exceptionMessage = Arrays.toString(result.getThrowable().getStackTrace());
-		testReport.get().fail("<details>" + "<summary>" + "<b>" + "<font color=" + "red>" + "Exception Occurred:Click to see"
-				+ "</font>" + "</b >" + "</summary>" + exceptionMessage.replaceAll(",", "<br>") + "</details>" + " \n");
+		testThread.get().fail("<details>" + "<summary>" + "<b>" + "<font color=" + "red>" +
+				"Exception Occurred:Click to see" + "</font>" + "</b >" + "</summary>" +
+				exceptionMessage.replaceAll(",", "<br>") + "</details>" + " \n");
 
 		try {
 			TestUtil.captureScreenshot();
-			testReport.get().fail("<b>" + "<font color=" + "red>" + "Screenshot of failure" + "</font>" + "</b>", MediaEntityBuilder.createScreenCaptureFromPath(TestUtil.screenshotName).build());
+			testThread.get().fail("<b>" + "<font color=" + "red>" + "Screenshot of failure" +
+					"</font>" + "</b>", MediaEntityBuilder.createScreenCaptureFromPath(TestUtil.screenshotName)
+					.build());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 		String failureLogg = "TEST CASE FAILED";
 		Markup m = MarkupHelper.createLabel(failureLogg, ExtentColor.RED);
-		testReport.get().log(Status.FAIL, m);
+		testThread.get().log(Status.FAIL, m);
 
 		System.setProperty("org.uncommons.reportng.escape-output", "false");
 		Reporter.log("Click to see screenshot");
 		Reporter.log("<a target=\"_blank\" href=" + TestUtil.screenshotName + ">Screenshot</a>");
 		Reporter.log("<br>");
 		Reporter.log("<br>");
-		Reporter.log("<a target=\"_blank\" href=" + TestUtil.screenshotName + "><img src=" + TestUtil.screenshotName + " height=200 width=240></img></a>");
+		Reporter.log("<a target=\"_blank\" href=" + TestUtil.screenshotName + "><img src=" +
+				TestUtil.screenshotName + " height=200 width=240></img></a>");
 		Reporter.log("<br>");
 	}
 

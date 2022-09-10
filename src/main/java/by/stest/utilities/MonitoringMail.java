@@ -29,10 +29,7 @@ public class MonitoringMail {
 
         session.setDebug(debug);
 
-        try
-        {
-
-
+        try {
             Transport bus = session.getTransport("smtp");
             bus.connect();
             Message message = new MimeMessage(session);
@@ -46,7 +43,6 @@ public class MonitoringMail {
                 addressTo[i] = new InternetAddress(to[i]);
             message.setRecipients(Message.RecipientType .TO, addressTo);
             message.setSubject(subject);
-
 
             BodyPart body = new MimeBodyPart();
 
@@ -64,10 +60,7 @@ public class MonitoringMail {
             Transport.send(message);
             System.out.println("Successfully Sent mail to All Users");
             bus.close();
-
-        }
-        catch (MessagingException mex)
-        {
+        } catch (MessagingException mex) {
             mex.printStackTrace();
         }
     }

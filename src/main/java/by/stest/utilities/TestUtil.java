@@ -31,7 +31,8 @@ public class TestUtil extends Page {
 		// of hyperlinks and other nasty hacks.
 		File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
 		Date d = new Date();
-		screenshotName = d.toString().replace(":", "_").replace(" ", "_") + ".jpg";
+		screenshotName = d.toString().replace(":", "_")
+				.replace(" ", "_") + ".jpg";
 		FileUtils.copyFile(scrFile,	new File("target\\surefire-reports\\html\\" + screenshotName));
 	}
 
@@ -74,7 +75,6 @@ public class TestUtil extends Page {
 	}
 
 	public static void initializeYourLogger(String fileName, String pattern) {
-
 		ConfigurationBuilder<BuiltConfiguration> builder = ConfigurationBuilderFactory
 				.newConfigurationBuilder();
 
@@ -82,10 +82,9 @@ public class TestUtil extends Page {
 		builder.setConfigurationName("DefaultLogger");
 
 		// create a console appender
-		AppenderComponentBuilder appenderBuilder = builder.newAppender("Console", "CONSOLE").addAttribute("target",
-				ConsoleAppender.Target.SYSTEM_OUT);
-		appenderBuilder.add(builder.newLayout("PatternLayout")
-				.addAttribute("pattern", pattern));
+		AppenderComponentBuilder appenderBuilder = builder.newAppender("Console", "CONSOLE")
+				.addAttribute("target", ConsoleAppender.Target.SYSTEM_OUT);
+		appenderBuilder.add(builder.newLayout("PatternLayout").addAttribute("pattern", pattern));
 		RootLoggerComponentBuilder rootLogger = builder.newRootLogger(Level.INFO);
 		rootLogger.add(builder.newAppenderRef("Console"));
 
@@ -94,7 +93,8 @@ public class TestUtil extends Page {
 		// create a rolling file appender
 		LayoutComponentBuilder layoutBuilder = builder.newLayout("PatternLayout")
 				.addAttribute("pattern", pattern);
-		ComponentBuilder triggeringPolicy = builder.newComponent("Policies")
+		ComponentBuilder triggeringPolicy = builder
+				.newComponent("Policies")
 				.addComponent(builder
 						.newComponent("SizeBasedTriggeringPolicy")
 						.addAttribute("size", "10MB"));
